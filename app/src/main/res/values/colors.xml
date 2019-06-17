@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#2962FF</color>
+    <color name="colorToolbar">#01ac70</color>
+
+    <color name="colorGreen900">#33691e</color>
+    <color name="colorGreen800">#558b2f</color>
+    <color name="colorGreen600">#43a047</color>
+    <color name="colorGreen500">#4caf50</color>
+    <color name="colorGreen400">#66bb6a</color>
+    <color name="colorGreen300">#81c784</color>
+    <color name="colorGreen200">#a5d6a7</color>
+
+    <color name="colorCardView">#CBA0D7F8</color>
+
+    <color name="colorRed700">#d50000</color>
+    <color name="colorRed600">#e53935</color>
+    <color name="colorRed500">#f44336</color>
+
+
+
+    <color name="colorWhite">#FFFFFF</color>
+
+    <color name="colorGrey50">#fafafa</color>
+
+    <color name="colorBlack">#000000</color>
+
+    <color name="colorGrey100">#f5f5f5</color>
+    <color name="colorGrey200">#eeeeee</color>
+    <color name="colorGrey300">#e0e0e0</color>
+    <color name="colorGrey400">#bdbdbd</color>
+    <color name="colorGrey500">#9e9e9e</color>
+
+    <color name="colorGreyMenu">#3dababab</color>
+    <color name="colorGreyMenu1">#3d7b7b7b</color>
+
+
+
+    <color name="primaryText">#de000000</color> <!-- 87% -->
+    <color name="secondaryText">#8a000000</color> <!-- 54% -->
+    <color name="tertiaryText">#61000000</color> <!-- 38% -->
+
+    <color name="colorDivider">#1f000000</color> <!-- 12% black -->
+
+    <color name="colorBackground">#eeeeee</color>
+
+
+</resources>

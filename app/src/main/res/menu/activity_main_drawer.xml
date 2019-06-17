@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/nav_item_NhapTKB"
+        android:icon="@drawable/ic_import_export_black_24dp"
+        android:title="Nhập thời khóa biểu" />
+    <item android:id="@+id/nav_item_XoaDuLieu"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:title="Xóa dữ liệu" />
+    <item android:id="@+id/nav_item_Thoat"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="Thoát" />
+
+</menu>

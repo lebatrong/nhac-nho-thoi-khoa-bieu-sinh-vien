@@ -1,35 +1,46 @@
 package com.student.thoikhoabieu.customAdapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kennyc.bottomsheet.BottomSheetListener;
+import com.kennyc.bottomsheet.BottomSheetMenuDialogFragment;
+import com.kongzue.dialog.v2.SelectDialog;
 import com.student.thoikhoabieu.DialogEditActivity;
+import com.student.thoikhoabieu.MainActivity;
+import com.student.thoikhoabieu.Models.DatabaseHandler;
 import com.student.thoikhoabieu.Models.objectClass.objthoikhoabieu;
 import com.student.thoikhoabieu.R;
 
 import java.util.ArrayList;
 
 
-public class aRclvThoiKhoaBieu extends RecyclerView.Adapter<aRclvThoiKhoaBieu.ViewHolder> {
+public class aRclvThoiKhoaBieu extends RecyclerView.Adapter<aRclvThoiKhoaBieu.ViewHolder> implements BottomSheetListener{
 
     ArrayList<objthoikhoabieu> mListThoiKhoaBieu;
     Context context;
 
-    public aRclvThoiKhoaBieu(ArrayList<objthoikhoabieu> mListThoiKhoaBieu, Context context) {
+    FragmentManager fragmentManager;
+
+    public aRclvThoiKhoaBieu(ArrayList<objthoikhoabieu> mListThoiKhoaBieu, Context context, FragmentManager fragmentManager) {
         this.mListThoiKhoaBieu = mListThoiKhoaBieu;
         this.context = context;
+        this.fragmentManager = fragmentManager;
     }
 
     public void setData(ArrayList<objthoikhoabieu> ListThoiKhoaBieu){
@@ -43,6 +54,29 @@ public class aRclvThoiKhoaBieu extends RecyclerView.Adapter<aRclvThoiKhoaBieu.Vi
     }
 
     private OnItemClickListener listener;
+
+    @Override
+    public void onSheetShown(@NonNull BottomSheetMenuDialogFragment bottomSheet, @Nullable Object object) {
+
+    }
+
+    @Override
+    public void onSheetItemSelected(@NonNull BottomSheetMenuDialogFragment bottomSheet, MenuItem item, @Nullable Object object) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.iMenu_ChinhSua:
+                actionEditTKB((objthoikhoabieu) object);
+                break;
+            case  R.id.iMenu_Xoa:
+                actionXoaTKB((objthoikhoabieu) object);
+                break;
+        }
+    }
+
+    @Override
+    public void onSheetDismissed(@NonNull BottomSheetMenuDialogFragment bottomSheet, @Nullable Object object, int dismissEvent) {
+
+    }
 
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
@@ -76,13 +110,18 @@ public class aRclvThoiKhoaBieu extends RecyclerView.Adapter<aRclvThoiKhoaBieu.Vi
         viewHolder.imvEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionEditTKB(viewHolder, thoikhoabieu);
+                new BottomSheetMenuDialogFragment.Builder(context,R.style.MyBottomSheetMenuStyle)
+                        .setSheet(R.menu.menu_bottom)
+                        .setTitle(null)
+                        .setListener(aRclvThoiKhoaBieu.this)
+                        .object(thoikhoabieu)
+                        .show(fragmentManager);
             }
         });
 
     }
 
-    private void actionEditTKB(ViewHolder viewHolder, objthoikhoabieu thoikhoabieu) {
+    private void actionEditTKB(objthoikhoabieu thoikhoabieu) {
         Intent intent = new Intent(context, DialogEditActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("monhoc", thoikhoabieu);
@@ -91,6 +130,32 @@ public class aRclvThoiKhoaBieu extends RecyclerView.Adapter<aRclvThoiKhoaBieu.Vi
         ((Activity)context).overridePendingTransition(R.anim.anim_enter_dialog,R.anim.anim_exit);
     }
 
+    private void actionXoaTKB(final objthoikhoabieu thoikhoabieu){
+        SelectDialog.show(context,
+                "Xóa môn học",
+                "Bạn muốn xóa môn " + thoikhoabieu.getTenMonHoc(),
+                "Xóa",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Xóa trong database
+                        DatabaseHandler db = new DatabaseHandler(context);
+                        db.deleteRecord(thoikhoabieu);
+                        //Reload lại
+                        mListThoiKhoaBieu.remove(thoikhoabieu);
+                        notifyDataSetChanged();
+                        Toast.makeText(context, "Xóa thành công môn " + thoikhoabieu.getTenMonHoc() + "!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                },
+                "Hủy",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+    }
 
 
     @Override

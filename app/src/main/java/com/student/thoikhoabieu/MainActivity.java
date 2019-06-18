@@ -6,21 +6,21 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.annotation.NonNull;
+import com.google.android.material.navigation.NavigationView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -227,44 +227,15 @@ public class MainActivity extends AppCompatActivity {
         //Lấy dữ liệu thời khóa biểu từ sqlite
         DatabaseHandler database = new DatabaseHandler(this);
         mListTKB = database.getAllThoiKhoaBieu();
-        Log.e("kiemtra",new Gson().toJson(mListTKB));
         //Setup RecyclerView thời khóa biểu
+        @SuppressLint("WrongConstant")
         LinearLayoutManager manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        adapter = new aRclvThoiKhoaBieu(mListTKB,this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        adapter = new aRclvThoiKhoaBieu(mListTKB,this, fragmentManager);
         rclvThoiKhoaBieu.setAdapter(adapter);
         rclvThoiKhoaBieu.setLayoutManager(manager);
 
-        //Xóa THời môn học
-        adapter.setOnItemLongClickListener(new aRclvThoiKhoaBieu.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, final int position) {
-                SelectDialog.show(MainActivity.this,
-                        "Xóa môn học",
-                        "Bạn muốn xóa môn " + mListTKB.get(position).getTenMonHoc(),
-                        "Xóa",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Xóa trong database
-                                objthoikhoabieu tkbXoa = mListTKB.get(position);
-                                DatabaseHandler db = new DatabaseHandler(MainActivity.this);
-                                db.deleteRecord(tkbXoa);
-                                //Reload lại
-                                laythoikhoabieu(false);
-                                Toast.makeText(MainActivity.this, "Xóa thành công môn " + tkbXoa.getTenMonHoc() + "!", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        },
-                        "Hủy",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
 
-            }
-        });
 
         if(mListTKB.size()>0){
 

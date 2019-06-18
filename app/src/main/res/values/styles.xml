@@ -9,4 +9,24 @@
         <item name="homeAsUpIndicator">@drawable/ic_chevron_left_black_24dp</item>
     </style>
 
+    <style name="MyBottomSheetMenuStyle" parent="@style/Theme.BottomSheetMenuDialog.Light">
+        <item name="bottom_sheet_menu_title_text_appearance">@style/TitleAppearance</item>
+        <item name="bottom_sheet_menu_list_text_appearance">@style/ListAppearance</item>
+        <item name="bottom_sheet_menu_grid_text_appearance">@style/GridAppearance</item>
+    </style>
+
+    <style name="TitleAppearance" parent="BottomSheetMenu.Title.TextAppearance">
+        <item name="android:textColor">@android:color/holo_green_light</item>
+    </style>
+
+    <style name="ListAppearance" parent="BottomSheetMenu.ListItem.TextAppearance">
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="GridAppearance" parent="BottomSheetMenu.GridItem.TextAppearance">
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>

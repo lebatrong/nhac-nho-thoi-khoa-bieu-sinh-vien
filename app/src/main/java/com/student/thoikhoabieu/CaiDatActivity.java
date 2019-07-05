@@ -94,6 +94,7 @@ public class CaiDatActivity extends AppCompatActivity {
         if(requestCode == CODE && resultCode == Activity.RESULT_OK){
             Uri audioFileUri = data.getData();
             uriAmThanh = audioFileUri.toString();
+            Log.e("kiemtra", uriAmThanh);
             filename = getFileName(audioFileUri);
             btnChonAmThanh.setText(filename);
         }

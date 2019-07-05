@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,8 +36,13 @@ import com.student.thoikhoabieu.Models.DatabaseHandler;
 import com.student.thoikhoabieu.Models.objectClass.objthoikhoabieu;
 import com.student.thoikhoabieu.Services.AlarmReceiver;
 import com.student.thoikhoabieu.customAdapter.aRclvThoiKhoaBieu;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -67,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     private long thoigianconlaimilisecond;
     private objthoikhoabieu tkbGanNhat;
 
-    private long thoigianbaotruoc = 600000;
     private boolean isDaXem = false;
 
     Button btnDaXem;
@@ -115,7 +120,33 @@ public class MainActivity extends AppCompatActivity {
             return true;
         return super.onOptionsItemSelected(item);
     }
+    // thời gian báo trước:
+    public long tgbaotruoc()
+    {
+        long mili = 0;
+        SharedPreferences preferences = getSharedPreferences("caidat",MODE_PRIVATE);
+        int gio = preferences.getInt("gio",0);
+        int phut = preferences.getInt("phut",0);
 
+        String strGio = String.valueOf(gio);
+        String strPhut = String.valueOf(phut);
+        if(gio<10)
+            strGio = "0"+gio;
+        if(phut<10)
+            strPhut = "0"+phut;
+
+        String strThoiGian = strGio+":"+strPhut;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+
+        try {
+            Date date = dateFormat.parse(strThoiGian);
+            mili = date.getTime();
+        } catch (ParseException e) {
+            Log.e("Loi", e.toString());
+            //e.printStackTrace();
+        }
+        return TimeUnit.MINUTES.toMillis(phut) + TimeUnit.HOURS.toMillis(gio) ;
+    }
     //Cài đặt menu trái
     @SuppressLint("RestrictedApi")
     private void setupDrawerLayout() {
@@ -164,6 +195,18 @@ public class MainActivity extends AppCompatActivity {
                                 });
                         drawerLayout.closeDrawers();
                         return true;
+                    case R.id.nav_item_CaiDat:
+                        startActivity(new Intent(MainActivity.this,CaiDatActivity.class));
+                        overridePendingTransition(R.anim.anim_enter,R.anim.anim_exit);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                drawerLayout.closeDrawers();
+                            }
+                        },1000);
+                        return true;
+
+
                     case R.id.nav_item_Thoat :
                         SelectDialog.show(MainActivity.this,
                                 "Thông báo",
@@ -281,18 +324,18 @@ public class MainActivity extends AppCompatActivity {
                             strThoiGian =  seconds +" giây";
                         tvThoiGianConLai.setText(strThoiGian);
 
-                        if(hours == 0 && minutes <= thoigianbaotruoc / 60000 && !isDaXem){
+                        if(hours == 0 && minutes <= tgbaotruoc() / 60000 && !isDaXem){
                             btnDaXem.setVisibility(View.VISIBLE);
                         }
                         thoigianconlaimilisecond = tkbGanNhat.chuyenTietVeThoiGian(MainActivity.this) - Calendar.getInstance().getTimeInMillis();
-                }
+                    }
 
-                @Override
-                public void onFinish() {
-                    laythoikhoabieu(false);
-                    isDaXem = false;
-                }
-            }.start();
+                    @Override
+                    public void onFinish() {
+                        laythoikhoabieu(false);
+                        isDaXem = false;
+                    }
+                }.start();
             }
 
 //            ===============================================================
@@ -311,11 +354,11 @@ public class MainActivity extends AppCompatActivity {
                         tkb = mListTKB.get(mListTKB.size()-1);
                 }
 
-                long time = tkb.chuyenTietVeThoiGian(this) - thoigianbaotruoc;
+                long time = tkb.chuyenTietVeThoiGian(this) - tgbaotruoc();
                 if(time!=-1 && time > Calendar.getInstance().getTimeInMillis()){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time ,pendingIntent);
-
+                        Log.e("kiemtra", time+"");
                     }
                     break;
                 }

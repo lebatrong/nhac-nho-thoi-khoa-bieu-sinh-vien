@@ -3,6 +3,7 @@
     package="com.student.thoikhoabieu">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,9 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DialogEditActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
-
+        <activity android:name=".CaiDatActivity"></activity>
+        <activity
+            android:name=".DialogEditActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity android:name=".NhapTKBActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -24,9 +26,8 @@
         </activity>
 
         <receiver android:name=".Services.AlarmReceiver" />
+
         <service android:name=".Services.Music" />
-
     </application>
-
 
 </manifest>

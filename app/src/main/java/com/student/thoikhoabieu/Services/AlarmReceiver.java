@@ -44,11 +44,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+        String content;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("caidat",MODE_PRIVATE);
+        if(sharedPreferences.getString("noidung","").equals("")) {
+            sharedPreferences = context.getSharedPreferences("data",MODE_PRIVATE);
+            String strhoten = sharedPreferences.getString("hoten", "Guest - 123 ");
+            String[] arr = strhoten.split("-");
+            content = "Chào bạn "+arr[0] + " gần đến giờ học, vui lòng chuẩn bị";
+        }else{
+            content = sharedPreferences.getString("noidung","");
+        }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("data",MODE_PRIVATE);
-        String strhoten = sharedPreferences.getString("hoten", "Guest - 123 ");
-        String[] arr = strhoten.split("-");
-        String content = "Chào bạn "+arr[0] + " gần đến giờ học, vui lòng chuẩn bị";
 
         //Android 8 trở lên
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

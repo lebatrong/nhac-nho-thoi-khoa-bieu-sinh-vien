@@ -7,6 +7,11 @@
     <item android:id="@+id/nav_item_XoaDuLieu"
         android:icon="@drawable/ic_delete_black_24dp"
         android:title="Xóa dữ liệu" />
+
+    <item android:id="@+id/nav_item_CaiDat"
+        android:icon="@drawable/ic_settings"
+        android:title="Cài đặt" />
+
     <item android:id="@+id/nav_item_Thoat"
         android:icon="@drawable/ic_exit_to_app_black_24dp"
         android:title="Thoát" />
